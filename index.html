@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClariTea Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+  /* Layout: dark green hero band with a brew-at-a-glance panel, then a single reading column of brew steps, contents table and notes. */
+  :root {
+    --bg: #F5F1E8;
+    --surface: #FBF8F1;
+    --fg: #18291E;
+    --muted: #56655B;
+    --line: #DDD6C4;
+    --accent: #D98E3E;
+    --accent-ink: #94540C;
+    --hero-bg: #1F3D2B;
+    --hero-fg: #F5F1E8;
+    --hero-muted: #B9C9BC;
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1C15;
+      --surface: #16271E;
+      --fg: #EDE8D8;
+      --muted: #A7B4A9;
+      --line: #2A4034;
+      --accent: #E6A24F;
+      --accent-ink: #E6A24F;
+      --hero-bg: #1F3D2B;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1C15;
+    --surface: #16271E;
+    --fg: #EDE8D8;
+    --muted: #A7B4A9;
+    --line: #2A4034;
+    --accent: #E6A24F;
+    --accent-ink: #E6A24F;
+    --hero-bg: #1F3D2B;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    padding-inline: 20px;
+  }
+  .wrap { max-width: 960px; margin-inline: auto; }
+  h1, h2 { font-family: var(--font-display); line-height: 1.1; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+
+  .hero {
+    background: var(--hero-bg);
+    color: var(--hero-fg);
+    margin-inline: -20px;
+    padding: 56px 20px 48px;
+  }
+  .hero-inner {
+    max-width: 960px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; display: block; }
+  .glance { margin-top: 28px; }
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .wordmark { font-size: clamp(48px, 9vw, 84px); font-weight: 800; letter-spacing: -0.02em; }
+  .tag {
+    margin-top: 14px;
+    letter-spacing: 0.22em;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--hero-muted);
+  }
+  .lead { margin-top: 24px; font-size: 19px; max-width: 34ch; color: var(--hero-fg); }
+
+  .glance {
+    border: 1px solid rgba(245, 241, 232, 0.25);
+    border-radius: 6px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .glance div { min-width: 0; }
+  .glance b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 38px);
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .glance span { font-size: 13px; color: var(--hero-muted); }
+  .glance-label {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--hero-muted);
+  }
+
+  section { padding-block: 56px 0; }
+  h2 { font-size: clamp(28px, 4.5vw, 38px); font-weight: 600; margin-bottom: 24px; }
+
+  ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; max-width: 680px; }
+  ol.steps li {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 16px;
+    padding-block: 18px;
+    border-top: 1px solid var(--line);
+  }
+  ol.steps li:last-child { border-bottom: 1px solid var(--line); }
+  .n {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--accent-ink);
+    line-height: 1;
+  }
+  ol.steps strong { display: block; font-size: 18px; }
+  ol.steps span { color: var(--muted); }
+
+  .contents { max-width: 680px; margin: 0; }
+  .contents > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    padding-block: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .contents > div:last-child { border-bottom: 1px solid var(--line); }
+  .contents dt { color: var(--fg); }
+  .contents dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+  .fine { margin-top: 14px; font-size: 14px; color: var(--muted); max-width: 62ch; }
+
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 24px; min-width: 0; }
+  .panel h3 { font-family: var(--font-display); font-size: 22px; margin: 0 0 10px; }
+  .price { font-family: var(--font-display); font-size: 44px; font-weight: 800; line-height: 1; color: var(--accent-ink); }
+  .panel p + p { margin-top: 8px; }
+  .muted { color: var(--muted); }
+
+
+  figure { margin: 0; }
+  figure img { width: 100%; display: block; border-radius: 6px; height: auto; }
+  figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+  .split > * { min-width: 0; }
+  .banner { padding-block: 56px 0; }
+  .banner h2 { margin-bottom: 14px; }
+  .banner p.sub { max-width: 60ch; margin-bottom: 22px; color: var(--muted); }
+  .bandimg { aspect-ratio: 16 / 7; object-fit: cover; }
+
+  footer {
+    margin-top: 64px;
+    padding-block: 28px 40px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--muted);
+  }
+  footer strong { color: var(--fg); }
+
+  @media (max-width: 760px) {
+    .hero { padding-top: 40px; }
+    .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .two { grid-template-columns: minmax(0, 1fr); }
+    .split { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    ol.steps li { grid-template-columns: 44px minmax(0, 1fr); }
+  }
+</style>
+
+</head><body>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="eyebrow">Brew guide and ingredients</p>
+      <h1 class="wordmark">ClariTea Co.</h1>
+      <p class="tag">SAME FOCUS. NO CRASH.</p>
+      <p class="lead">Green tea with natural caffeine and L-theanine. A step up from a regular cup, without the weight of an energy drink.</p>
+      <div class="glance" aria-label="Brew settings at a glance">
+        <p class="glance-label">One bag, one mug</p>
+        <div><b>80°C</b><span>water</span></div>
+        <div><b>250 mL</b><span>per bag</span></div>
+        <div><b>3 min</b><span>steep</span></div>
+      </div>
+    </div>
+    <img class="hero-img" src="img/hero.jpg" alt="A ClariTea Co. box beside a steaming cup of green tea, loose leaves and fresh tea leaves on linen">
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="banner">
+    <h2>Find your middle</h2>
+    <p class="sub">Between the rush of a can and a cup that does too little, there is a calmer way to get through a long session.</p>
+    <figure><img class="bandimg" src="img/contrast.jpg" alt="Left: an energy drink can being cracked open in a burst of red. Right: warm water poured over a ClariTea bag in a speckled mug"><figcaption>The rush of a can, or a quiet cup of ClariTea.</figcaption></figure>
+  </section>
+  <section>
+    <h2>How to brew it</h2>
+    <div class="split">
+    <ol class="steps">
+      <li><span class="n">1</span><div><strong>Heat the water</strong><span>Boil the kettle, then leave it for about a minute. Green tea tastes best around 80°C, not at a full boil.</span></div></li>
+      <li><span class="n">2</span><div><strong>Add one bag to a mug</strong><span>Pour in about 250 mL. Use one bag per mug.</span></div></li>
+      <li><span class="n">3</span><div><strong>Steep for 3 minutes</strong><span>Leave it long enough to draw out the flavour, and short enough to keep it from turning bitter.</span></div></li>
+      <li><span class="n">4</span><div><strong>Remove the bag and start your session</strong><span>Drink it warm before you sit down to study or work.</span></div></li>
+    </ol>
+    <figure><img src="img/brew.jpg" alt="Hands lifting a ClariTea pyramid bag from a steaming mug"></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>What is in each bag</h2>
+    <div class="split">
+    <figure><img src="img/bag.jpg" alt="A pyramid tea bag filled with green tea leaves, with an amber ClariTea tag"></figure>
+    <div>
+    <dl class="contents">
+      <div><dt>Green tea leaf</dt><dd>Base</dd></div>
+      <div><dt>Natural caffeine</dt><dd>40 mg</dd></div>
+      <div><dt>L-theanine</dt><dd>60 mg</dd></div>
+      <div><dt>Sugar</dt><dd>0 g</dd></div>
+      <div><dt>Bags per box</dt><dd>20</dd></div>
+    </dl>
+    <p class="fine">L-theanine is an amino acid found naturally in tea. This is the concept formulation. A final specification would be confirmed with a food manufacturer and labelled to Australian food standards.</p>
+    </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="two">
+      <div class="panel">
+        <h3>Price</h3>
+        <p class="price">$0.95</p>
+        <p class="muted">per cup, $19 per box of 20 tea bags.</p>
+        <p class="muted">Sold through our own online store first. Subscriptions would follow, so a box arrives before you run out.</p>
+        <figure style="margin-top:16px"><img src="img/delivery.jpg" alt="A parcel with a ClariTea sticker on a doorstep"></figure>
+      </div>
+      <div class="panel">
+        <h3>Try a free 3-pack</h3>
+        <p>Sampling stands outside university libraries at exam time, so you can try ClariTea before a study session.</p>
+        <p class="muted">Campaign: Find Your Middle.</p>
+        <figure style="margin-top:16px"><img src="img/kitchen.jpg" alt="Friends sharing tea in a bright kitchen"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Good to know</h2>
+    <p style="max-width: 62ch;">Each bag contains caffeine. If you are pregnant, breastfeeding, or sensitive to caffeine, check with your doctor before drinking it. ClariTea is a tea, not a medicine, and is not intended to treat any condition.</p>
+  </section>
+
+  <footer>
+    <p><strong>ClariTea Co.</strong> is a hypothetical brand created for a University of Sydney marketing assignment (MKTG1001). The product is not for sale and this page is a concept. Images are AI-generated concept visuals.</p>
+  </footer>
+</main>
+
+</body></html>
